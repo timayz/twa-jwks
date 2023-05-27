@@ -2,6 +2,7 @@
 name = "axum"
 version = "1.1.0"
 edition = "2021"
+publish = false
 
 [dependencies]
 twa-jwks = { path = "../../twa-jwks", version = "1.1.0", features = ["axum"] }
