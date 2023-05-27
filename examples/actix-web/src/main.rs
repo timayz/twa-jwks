@@ -1,12 +1,12 @@
 use std::io::Error;
 
-use actix_web::{HttpResponse, HttpServer, App, web::Data, get, Responder};
+use actix_web::{get, web::Data, App, HttpResponse, HttpServer, Responder};
 use serde::Deserialize;
-use twa_jwks::{JwksClient, actix_web::JwtPayload};
+use twa_jwks::{actix_web::JwtPayload, JwksClient};
 
 #[derive(Deserialize)]
 struct JwtClaims {
-    pub sub: String
+    pub sub: String,
 }
 
 #[get("/hello")]
