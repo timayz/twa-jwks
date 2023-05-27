@@ -1,11 +1,11 @@
 [package]
 name = "axum"
-version = "1.1.0"
+version = "1.1.1"
 edition = "2021"
 publish = false
 
 [dependencies]
-twa-jwks = { path = "../../twa-jwks", version = "1.1.0", features = ["axum"] }
+twa-jwks = { path = "../../twa-jwks", version = "1.1.1", features = ["axum"] }
 axum = { version = "0.6", features = ["macros"] }
 tokio = { version = "1.0", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
