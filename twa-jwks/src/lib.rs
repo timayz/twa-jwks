@@ -14,6 +14,9 @@ pub mod keyset;
 #[cfg(feature = "actix-web")]
 pub mod actix_web;
 
+#[cfg(feature = "axum")]
+pub mod axum;
+
 #[derive(ThisError, Debug)]
 pub enum Error {
     #[error("reqwest: {0}")]
@@ -38,12 +41,10 @@ impl From<error::Error> for Error {
     }
 }
 
-///
-/// ```rust
-///
-/// use actix_jwks::JwksClient;
-///
+/// /// ```rust
+/// # tokio_test::block_on(async {
 /// let jwks_client = JwksClient::new("http://127.0.0.1:4456/.well-known/jwks.json").await.unwrap();
+/// # }
 /// ```
 #[derive(Clone)]
 pub struct JwksClient {
