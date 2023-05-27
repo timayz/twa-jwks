@@ -46,7 +46,7 @@ impl From<error::Error> for Error {
 ///
 /// use twa_jwks::JwksClient;
 ///
-/// let jwks_client = JwksClient::new("http://127.0.0.1:4456/.well-known/jwks.json").await.unwrap();
+/// let jwks_client = JwksClient::new("http://127.0.0.1:4456/.well-known/jwks.json").unwrap();
 /// ```
 #[derive(Clone)]
 pub struct JwksClient {
