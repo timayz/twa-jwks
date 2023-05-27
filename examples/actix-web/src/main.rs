@@ -16,7 +16,7 @@ async fn hello(JwtPayload(payload): JwtPayload<JwtClaims>) -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let jwks_client = JwksClient::build(Some("http://127.0.0.1:6550/.well-known/jwks.json"))
+    let jwks_client = JwksClient::new("http://127.0.0.1:6550/.well-known/jwks.json")
         .await
         .map_err(|e| Error::new(std::io::ErrorKind::Other, e))?;
 
