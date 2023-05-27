@@ -1,30 +1,7 @@
-[package]
-name = "twa-jwks"
-version = "1.0.0"
-edition = "2021"
-license = "Apache-2.0"
-description = "Library to validate JWT tokens using JSON Web Key Set (JWKS)"
-repository = "https://github.com/timada-org/twa-jwks"
-homepage = "https://docs.rs/twa-jwks"
-documentation = "https://docs.rs/twa-jwks"
+[workspace]
 
-[dependencies]
-actix-web = { version = "4.3", optional = true }
-futures-util = { version = "0.3", optional = true }
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-thiserror = "1.0"
-tracing = "0.1"
-base64 = "^0.21"
-reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls", "rustls"] }
-regex = "1.8"
-ring = "^0.16"
-tokio = { version = "1.25", features = ["sync"] }
-
-[dev-dependencies]
-tokio = { version = "1.25", features = ["macros", "rt-multi-thread"] }
-tokio-test = "0.4"
-
-[features]
-default = ["actix-web"]
-actix-web = ["dep:actix-web", "dep:futures-util"]
+members = [
+    "./examples/actix-web",
+    "./examples/axum",
+    "./twa-jwks"
+]
