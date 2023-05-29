@@ -1,7 +1,5 @@
 use base64::{engine, Engine};
 use regex::Regex;
-// use reqwest;
-// use reqwest::Response;
 use ring::signature::{RsaPublicKeyComponents, RSA_PKCS1_2048_8192_SHA256};
 use serde::{
     de::DeserializeOwned,
@@ -105,8 +103,7 @@ impl KeyStore {
             pub keys: Vec<JwtKey>,
         }
 
-        let mut response = ureq::get("http://example.com")
-            .set("Example-Header", "header value")
+        let mut response = ureq::get(&self.key_url)
             .call()
             .map_err(|_| err_con("Could not download JWKS"))?;
 
