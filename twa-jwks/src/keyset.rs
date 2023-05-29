@@ -1,7 +1,7 @@
 use base64::{engine, Engine};
 use regex::Regex;
-use reqwest;
-use reqwest::Response;
+// use reqwest;
+// use reqwest::Response;
 use ring::signature::{RsaPublicKeyComponents, RSA_PKCS1_2048_8192_SHA256};
 use serde::{
     de::DeserializeOwned,
@@ -9,6 +9,7 @@ use serde::{
 };
 use serde_json::Value;
 use std::time::{Duration, SystemTime};
+use ureq::Response;
 
 use crate::error::*;
 use crate::jwt::*;
@@ -104,44 +105,35 @@ impl KeyStore {
             pub keys: Vec<JwtKey>,
         }
 
-        let body: String = ureq::get("http://example.com")
-        .set("Example-Header", "header value")
-        .call().unwrap()
-        .into_string().unwrap();
+        let mut response = ureq::get("http://example.com")
+            .set("Example-Header", "header value")
+            .call()
+            .map_err(|_| err_con("Could not download JWKS"))?;
 
-    println!("{}", body);
+        let load_time = SystemTime::now();
+        self.load_time = Some(load_time);
 
-        // let mut response = reqwest::get(&self.key_url)
-        //     .await
-        //     .map_err(|_| err_con("Could not download JWKS"))?;
+        let result = KeyStore::cache_max_age(&mut response);
 
-        // let load_time = SystemTime::now();
-        // self.load_time = Some(load_time);
+        if let Ok(value) = result {
+            let expire = load_time + Duration::new(value, 0);
+            self.expire_time = Some(expire);
+            let refresh_time = (value as f64 * self.refresh_interval) as u64;
+            let refresh = load_time + Duration::new(refresh_time, 0);
+            self.refresh_time = Some(refresh);
+        }
 
-        // let result = KeyStore::cache_max_age(&mut response);
+        let jwks = response
+            .into_json::<JwtKeys>()
+            .map_err(|_| err_int("Failed to parse keys"))?;
 
-        // if let Ok(value) = result {
-        //     let expire = load_time + Duration::new(value, 0);
-        //     self.expire_time = Some(expire);
-        //     let refresh_time = (value as f64 * self.refresh_interval) as u64;
-        //     let refresh = load_time + Duration::new(refresh_time, 0);
-        //     self.refresh_time = Some(refresh);
-        // }
-
-        // let jwks = response
-        //     .json::<JwtKeys>()
-        //     .await
-        //     .map_err(|_| err_int("Failed to parse keys"))?;
-
-        // jwks.keys.iter().for_each(|k| self.add_key(k));
+        jwks.keys.iter().for_each(|k| self.add_key(k));
 
         Ok(())
     }
 
     fn cache_max_age(response: &mut Response) -> Result<u64, ()> {
-        let header = response.headers().get("cache-control").ok_or(())?;
-
-        let header_text = header.to_str().map_err(|_| ())?;
+        let header_text = response.header("cache-control").ok_or(())?;
 
         let re = Regex::new("max-age\\s*=\\s*(\\d+)").map_err(|_| ())?;
 

@@ -1,6 +1,5 @@
 use axum::extract::FromRef;
-use axum::http::Request;
-use reqwest::header;
+use axum::http::{header, Request};
 use serde::de::DeserializeOwned;
 use serde_json::json;
 use serde_json::Value;

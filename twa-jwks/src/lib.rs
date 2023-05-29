@@ -19,20 +19,11 @@ pub mod axum;
 
 #[derive(ThisError, Debug)]
 pub enum Error {
-    #[error("reqwest: {0}")]
-    Reqwest(reqwest::Error),
-
     #[error("jwks_client: {0}")]
     Jwks(error::Error),
 
     #[error("{0}")]
     Unknown(String),
-}
-
-impl From<reqwest::Error> for Error {
-    fn from(e: reqwest::Error) -> Self {
-        Error::Reqwest(e)
-    }
 }
 
 impl From<error::Error> for Error {
