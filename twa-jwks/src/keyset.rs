@@ -77,7 +77,7 @@ impl KeyStore {
 
         key_store.key_url = jkws_url;
 
-        // key_store.load_keys().await?;
+        key_store.load_keys().await?;
 
         Ok(key_store)
     }
@@ -104,29 +104,29 @@ impl KeyStore {
             pub keys: Vec<JwtKey>,
         }
 
-        let mut response = reqwest::get(&self.key_url)
+        let mut _response = reqwest::get(&self.key_url)
             .await
             .map_err(|_| err_con("Could not download JWKS"))?;
 
-        let load_time = SystemTime::now();
-        self.load_time = Some(load_time);
+        // let load_time = SystemTime::now();
+        // self.load_time = Some(load_time);
 
-        let result = KeyStore::cache_max_age(&mut response);
+        // let result = KeyStore::cache_max_age(&mut response);
 
-        if let Ok(value) = result {
-            let expire = load_time + Duration::new(value, 0);
-            self.expire_time = Some(expire);
-            let refresh_time = (value as f64 * self.refresh_interval) as u64;
-            let refresh = load_time + Duration::new(refresh_time, 0);
-            self.refresh_time = Some(refresh);
-        }
+        // if let Ok(value) = result {
+        //     let expire = load_time + Duration::new(value, 0);
+        //     self.expire_time = Some(expire);
+        //     let refresh_time = (value as f64 * self.refresh_interval) as u64;
+        //     let refresh = load_time + Duration::new(refresh_time, 0);
+        //     self.refresh_time = Some(refresh);
+        // }
 
-        let jwks = response
-            .json::<JwtKeys>()
-            .await
-            .map_err(|_| err_int("Failed to parse keys"))?;
+        // let jwks = response
+        //     .json::<JwtKeys>()
+        //     .await
+        //     .map_err(|_| err_int("Failed to parse keys"))?;
 
-        jwks.keys.iter().for_each(|k| self.add_key(k));
+        // jwks.keys.iter().for_each(|k| self.add_key(k));
 
         Ok(())
     }
