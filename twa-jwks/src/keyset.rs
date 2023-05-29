@@ -104,29 +104,36 @@ impl KeyStore {
             pub keys: Vec<JwtKey>,
         }
 
-        let mut response = reqwest::get(&self.key_url)
-            .await
-            .map_err(|_| err_con("Could not download JWKS"))?;
+        let body: String = ureq::get("http://example.com")
+        .set("Example-Header", "header value")
+        .call().unwrap()
+        .into_string().unwrap();
 
-        let load_time = SystemTime::now();
-        self.load_time = Some(load_time);
+    println!("{}", body);
 
-        let result = KeyStore::cache_max_age(&mut response);
+        // let mut response = reqwest::get(&self.key_url)
+        //     .await
+        //     .map_err(|_| err_con("Could not download JWKS"))?;
 
-        if let Ok(value) = result {
-            let expire = load_time + Duration::new(value, 0);
-            self.expire_time = Some(expire);
-            let refresh_time = (value as f64 * self.refresh_interval) as u64;
-            let refresh = load_time + Duration::new(refresh_time, 0);
-            self.refresh_time = Some(refresh);
-        }
+        // let load_time = SystemTime::now();
+        // self.load_time = Some(load_time);
 
-        let jwks = response
-            .json::<JwtKeys>()
-            .await
-            .map_err(|_| err_int("Failed to parse keys"))?;
+        // let result = KeyStore::cache_max_age(&mut response);
 
-        jwks.keys.iter().for_each(|k| self.add_key(k));
+        // if let Ok(value) = result {
+        //     let expire = load_time + Duration::new(value, 0);
+        //     self.expire_time = Some(expire);
+        //     let refresh_time = (value as f64 * self.refresh_interval) as u64;
+        //     let refresh = load_time + Duration::new(refresh_time, 0);
+        //     self.refresh_time = Some(refresh);
+        // }
+
+        // let jwks = response
+        //     .json::<JwtKeys>()
+        //     .await
+        //     .map_err(|_| err_int("Failed to parse keys"))?;
+
+        // jwks.keys.iter().for_each(|k| self.add_key(k));
 
         Ok(())
     }
