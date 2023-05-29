@@ -1,7 +1,5 @@
 use base64::{engine, Engine};
 use regex::Regex;
-use reqwest;
-use reqwest::Response;
 use ring::signature::{RsaPublicKeyComponents, RSA_PKCS1_2048_8192_SHA256};
 use serde::{
     de::DeserializeOwned,
@@ -9,6 +7,7 @@ use serde::{
 };
 use serde_json::Value;
 use std::time::{Duration, SystemTime};
+use ureq::Response;
 
 use crate::error::*;
 use crate::jwt::*;
@@ -104,8 +103,8 @@ impl KeyStore {
             pub keys: Vec<JwtKey>,
         }
 
-        let mut response = reqwest::get(&self.key_url)
-            .await
+        let mut response = ureq::get(&self.key_url)
+            .call()
             .map_err(|_| err_con("Could not download JWKS"))?;
 
         let load_time = SystemTime::now();
@@ -122,8 +121,7 @@ impl KeyStore {
         }
 
         let jwks = response
-            .json::<JwtKeys>()
-            .await
+            .into_json::<JwtKeys>()
             .map_err(|_| err_int("Failed to parse keys"))?;
 
         jwks.keys.iter().for_each(|k| self.add_key(k));
@@ -132,9 +130,7 @@ impl KeyStore {
     }
 
     fn cache_max_age(response: &mut Response) -> Result<u64, ()> {
-        let header = response.headers().get("cache-control").ok_or(())?;
-
-        let header_text = header.to_str().map_err(|_| ())?;
+        let header_text = response.header("cache-control").ok_or(())?;
 
         let re = Regex::new("max-age\\s*=\\s*(\\d+)").map_err(|_| ())?;
 
