@@ -77,7 +77,7 @@ impl KeyStore {
 
         key_store.key_url = jkws_url;
 
-        key_store.load_keys().await?;
+        // key_store.load_keys().await?;
 
         Ok(key_store)
     }
