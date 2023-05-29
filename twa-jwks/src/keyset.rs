@@ -104,9 +104,9 @@ impl KeyStore {
             pub keys: Vec<JwtKey>,
         }
 
-        let mut _response = reqwest::get(&self.key_url)
-            .await
-            .map_err(|_| err_con("Could not download JWKS"))?;
+        // let mut _response = reqwest::get(&self.key_url)
+        //     .await
+        //     .map_err(|_| err_con("Could not download JWKS"))?;
 
         // let load_time = SystemTime::now();
         // self.load_time = Some(load_time);
