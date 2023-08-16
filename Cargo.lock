@@ -1158,9 +1158,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.104"
+version = "1.0.105"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "076066c5f1078eac5b722a31827a8832fe108bed65dfa75e233c89f8206e976c"
+checksum = "693151e1ac27563d6dbcec9dee9fbd5da8539b20fa14ad3752b2e6d363ace360"
 dependencies = [
  "itoa",
  "ryu",
@@ -1478,7 +1478,7 @@ checksum = "3528ecfd12c466c6f163363caf2d02a71161dd5e1cc6ae7b34207ea2d42d81ed"
 
 [[package]]
 name = "twa-actix-web"
-version = "1.1.4"
+version = "1.1.5"
 dependencies = [
  "actix-web",
  "serde",
@@ -1488,7 +1488,7 @@ dependencies = [
 
 [[package]]
 name = "twa-axum"
-version = "1.1.4"
+version = "1.1.5"
 dependencies = [
  "axum",
  "serde",
@@ -1499,7 +1499,7 @@ dependencies = [
 
 [[package]]
 name = "twa-jwks"
-version = "1.1.4"
+version = "1.1.5"
 dependencies = [
  "actix-web",
  "axum",
