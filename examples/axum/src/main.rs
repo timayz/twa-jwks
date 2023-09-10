@@ -1,4 +1,4 @@
-use axum::{response::IntoResponse, routing::get, Json, Router};
+use axum::{response::IntoResponse, routing::get, Extension, Json, Router};
 use serde::Deserialize;
 use twa_jwks::{axum::JwtPayload, JwksClient};
 
@@ -19,7 +19,7 @@ async fn main() {
 
     let app = Router::new()
         .route("/hello", get(hello))
-        .with_state(jwks_client);
+        .layer(Extension(jwks_client));
 
     axum::Server::bind(&([127, 0, 0, 1], 3001).into())
         .serve(app.into_make_service())

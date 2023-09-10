@@ -1,70 +1,87 @@
-use axum::extract::FromRef;
-use axum::http::{header, Request};
+use std::convert::Infallible;
+
+use axum::extract::FromRequestParts;
+use axum::http::header;
+use axum::http::request::Parts;
+use axum::{Extension, RequestPartsExt};
 use serde::de::DeserializeOwned;
-use serde_json::json;
-use serde_json::Value;
 use tracing::debug;
 
 use crate::JwksClient;
 
-use axum::{async_trait, extract::FromRequest, http::StatusCode};
+use axum::{async_trait, http::StatusCode};
 
-pub struct JwtPayload<T: DeserializeOwned>(pub T);
+pub struct JwtPayloadOption<T: DeserializeOwned>(pub Option<T>);
 
 #[async_trait]
-impl<T, S, B> FromRequest<S, B> for JwtPayload<T>
+impl<S, T> FromRequestParts<S> for JwtPayloadOption<T>
 where
-    T: DeserializeOwned,
-    B: Send + 'static,
     S: Send + Sync,
-    JwksClient: FromRef<S>,
+    T: DeserializeOwned,
 {
-    type Rejection = (StatusCode, axum::Json<Value>);
+    type Rejection = Infallible;
 
-    async fn from_request(req: Request<B>, state: &S) -> Result<Self, Self::Rejection> {
-        let token = match req
-            .headers()
-            .get(header::AUTHORIZATION)
-            .and_then(|v| v.to_str().ok())
-        {
-            Some(value) => value.replace("Bearer ", ""),
-            _ => {
-                let payload = json!({
-                    "message": "Unauthorized",
-                });
+    async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
+        let client = parts
+            .extract::<Extension<JwksClient>>()
+            .await
+            .expect("JwksClient not configured correctly");
 
-                return Err((StatusCode::UNAUTHORIZED, axum::Json(payload)));
-            }
+        let Some(authorization) = parts.headers.get(header::AUTHORIZATION) else {
+            return Ok(Self(None));
         };
 
-        let client = JwksClient::from_ref(state);
+        let Ok(authorization) = authorization.to_str() else {
+            return Ok(Self(None));
+        };
+
+        let token = authorization.replace("Bearer ", "");
 
         let jwt = match client.verify(&token).await {
             Ok(jwt) => jwt,
             Err(e) => {
                 debug!("{}", e);
 
-                let payload = json!({
-                    "message": "Unauthorized",
-                });
-
-                return Err((StatusCode::UNAUTHORIZED, axum::Json(payload)));
+                return Ok(Self(None));
             }
         };
 
-        let payload = match jwt.payload().into::<T>() {
-            Ok(payload) => Self(payload),
+        match jwt.payload().into::<T>() {
+            Ok(payload) => Ok(Self(Some(payload))),
             Err(e) => {
                 debug!("{}", e);
 
-                let payload = json!({
-                    "message": "Unauthorized",
-                });
-
-                return Err((StatusCode::UNAUTHORIZED, axum::Json(payload)));
+                return Ok(Self(None));
             }
+        }
+    }
+}
+
+pub struct JwtPayload<T: DeserializeOwned>(pub T);
+
+#[async_trait]
+impl<S, T> FromRequestParts<S> for JwtPayload<T>
+where
+    S: Send + Sync,
+    T: DeserializeOwned,
+{
+    type Rejection = (StatusCode, axum::response::Html<&'static str>);
+
+    async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
+        let Ok(payload) = JwtPayloadOption::<T>::from_request_parts(parts, state).await else {
+            return Err((
+                StatusCode::UNAUTHORIZED,
+                axum::response::Html("Unauthorized"),
+            ));
         };
 
-        Ok(payload)
+        let Some(payload) = payload.0 else {
+            return Err((
+                StatusCode::UNAUTHORIZED,
+                axum::response::Html("Unauthorized"),
+            ));
+        };
+
+        Ok(Self(payload))
     }
 }
