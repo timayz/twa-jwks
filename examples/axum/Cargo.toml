@@ -1,12 +1,12 @@
 [package]
 name = "twa-axum"
-version = "1.2.0"
+version = "1.2.1"
 edition = "2021"
 publish = false
 license = "Apache-2.0"
 
 [dependencies]
-twa-jwks = { path = "../../twa-jwks", version = "1.2.0", features = ["axum"] }
+twa-jwks = { path = "../../twa-jwks", version = "1.2.1", features = ["axum"] }
 axum = { version = "0.6.20", features = ["macros"] }
 tokio = { version = "1.32.0", features = ["full"] }
 serde = { version = "1.0.188", features = ["derive"] }
