@@ -1,11 +1,11 @@
 [package]
 name = "twa-actix-web"
-version = "1.2.1"
+version = "1.2.2"
 edition = "2021"
 publish = false
 license = "Apache-2.0"
 
 [dependencies]
-twa-jwks = { path = "../../twa-jwks", version = "1.2.1", features = ["actix-web"] }
+twa-jwks = { path = "../../twa-jwks", version = "1.2.2", features = ["actix-web"] }
 actix-web = { version = "4.4.0", features = ["macros"] }
 serde = { version = "1.0.188", features = ["derive"] }
