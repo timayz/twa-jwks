@@ -9,4 +9,4 @@ license = "Apache-2.0"
 twa-jwks = { path = "../../twa-jwks", version = "1.2.3", features = ["axum"] }
 axum = { version = "0.6.20", features = ["macros"] }
 tokio = { version = "1.33.0", features = ["full"] }
-serde = { version = "1.0.189", features = ["derive"] }
+serde = { version = "1.0.190", features = ["derive"] }
