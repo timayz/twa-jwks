@@ -21,8 +21,9 @@ async fn main() {
         .route("/hello", get(hello))
         .layer(Extension(jwks_client));
 
-    axum::Server::bind(&([127, 0, 0, 1], 3001).into())
-        .serve(app.into_make_service())
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3001").await.unwrap();
+
+    axum::serve(listener, app.into_make_service())
         .await
         .unwrap();
 }
