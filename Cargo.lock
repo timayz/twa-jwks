@@ -479,9 +479,9 @@ dependencies = [
 
 [[package]]
 name = "deranged"
-version = "0.3.9"
+version = "0.3.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0f32d04922c60427da6f9fef14d042d9edddef64cb9d4ce0d64d0685fbeb1fd3"
+checksum = "8eb30d70a07a3b04884d2677f06bec33509dc67ca60d92949e5535352d3191dc"
 dependencies = [
  "powerfmt",
 ]
@@ -1506,7 +1506,7 @@ dependencies = [
 
 [[package]]
 name = "twa-actix-web"
-version = "1.2.6"
+version = "1.2.7"
 dependencies = [
  "actix-web",
  "serde",
@@ -1515,7 +1515,7 @@ dependencies = [
 
 [[package]]
 name = "twa-axum"
-version = "1.2.6"
+version = "1.2.7"
 dependencies = [
  "axum",
  "serde",
@@ -1525,7 +1525,7 @@ dependencies = [
 
 [[package]]
 name = "twa-jwks"
-version = "1.2.6"
+version = "1.2.7"
 dependencies = [
  "actix-web",
  "axum",
@@ -1690,18 +1690,18 @@ checksum = "ed94fce61571a4006852b7389a063ab983c02eb1bb37b47f8272ce92d06d9538"
 
 [[package]]
 name = "zerocopy"
-version = "0.7.26"
+version = "0.7.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e97e415490559a91254a2979b4829267a57d2fcd741a98eee8b722fb57289aa0"
+checksum = "7d6f15f7ade05d2a4935e34a457b936c23dc70a05cc1d97133dc99e7a3fe0f0e"
 dependencies = [
  "zerocopy-derive",
 ]
 
 [[package]]
 name = "zerocopy-derive"
-version = "0.7.26"
+version = "0.7.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd7e48ccf166952882ca8bd778a43502c64f33bf94c12ebe2a7f08e5a0f6689f"
+checksum = "dbbad221e3f78500350ecbd7dfa4e63ef945c05f4c61cb7f4d3f84cd0bba649b"
 dependencies = [
  "proc-macro2",
  "quote",
