@@ -7,6 +7,6 @@ license = "Apache-2.0"
 
 [dependencies]
 twa-jwks = { path = "../../twa-jwks", version = "1.2.9", features = ["axum"] }
-axum = { version = "0.7.2", features = ["macros"] }
+axum = { version = "0.7.3", features = ["macros"] }
 tokio = { version = "1.35.1", features = ["full"] }
-serde = { version = "1.0.193", features = ["derive"] }
+serde = { version = "1.0.195", features = ["derive"] }
