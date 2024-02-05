@@ -11,7 +11,7 @@ documentation = "https://docs.rs/twa-jwks"
 keywords = ["actix-web", "axum", "jwks"]
 
 [dependencies]
-actix-web = { version = "4.4.1", optional = true }
+actix-web = { version = "4.5.1", optional = true }
 axum = { version = "0.7.4", optional = true }
 futures-util = { version = "0.3.30", optional = true }
 serde = { version = "1.0.196", features = ["derive"] }
@@ -19,13 +19,13 @@ serde_json = "1.0.113"
 thiserror = "1.0.56"
 tracing = "0.1.40"
 base64 = "0.21.7"
-ureq = { version = "2.9.1", features = ["json"] }
+ureq = { version = "2.9.4", features = ["json"] }
 regex = "1.10.3"
 ring = "0.17.7"
-tokio = { version = "1.35.1", features = ["sync"] }
+tokio = { version = "1.36.0", features = ["sync"] }
 
 [dev-dependencies]
-tokio = { version = "1.35.1", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.36.0", features = ["macros", "rt-multi-thread"] }
 tokio-test = "0.4.3"
 
 [features]
